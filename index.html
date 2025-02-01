@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация / Вход</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Регистрация / Вход</h1>
+    </header>
+    
+    <main>
+        <!-- Секция ползунка с иконками -->
+        <section class="slider-section">
+            <div class="slider-container">
+                <span class="slider-icon left">Регистрация</span>
+                <input type="range" id="auth-slider" min="0" max="1" step="1">
+                <span class="slider-icon right">Вход</span>
+            </div>
+        </section>
+        
+        <!-- Секция формы регистрации -->
+        <section class="auth-form" id="register-form">
+            <h2>Регистрация</h2>
+            <form id="register">
+                <input type="email" id="register-email" placeholder="Введите вашу почту" required>
+                <input type="password" id="register-password" placeholder="Придумайте пароль" required>
+                <input type="password" id="confirm-password" placeholder="Подтвердите пароль" required>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+            <p id="register-error" class="error"></p>
+        </section>
+
+        <!-- Секция формы входа -->
+        <section class="auth-form" id="login-form" style="display: none;">
+            <h2>Вход</h2>
+            <form id="login">
+                <input type="email" id="login-email" placeholder="Введите вашу почту" required>
+                <input type="password" id="login-password" placeholder="Введите ваш пароль" required>
+                <button type="submit">Войти</button>
+            </form>
+            <p id="login-error" class="error"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Maxim</p>
+    </footer>
+
+    <script src="script.js">document.getElementById("register-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Получаем значения из формы
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirm-password").value;
+
+        // Проверка на совпадение паролей
+        if (password !== confirmPassword) {
+            alert("Пароли не совпадают!");
+            return;
+        }
+
+        // Отправляем запрос на регистрацию
+        const response = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Если регистрация успешна, перенаправляем на home.html
+            window.location.href = 'home.html';
+        } else {
+            alert(data.message || "Произошла ошибка при регистрации");
+        }
+    });</script>
+</body>
+</html>
